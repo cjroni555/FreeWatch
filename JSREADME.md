@@ -1,2 +1,2 @@
 # FreeWatchs javascript files
-FreeWatchs javascript files for.
+All of FreeWatchs javascript files for FreeWatchs website.
