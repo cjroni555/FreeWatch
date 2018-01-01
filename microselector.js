@@ -1,60 +1,67 @@
-/*
- * Javascript DOM-Selection Engine
- * Jordan Burgess 2014-05-15
- * Released under the MIT license
- */
+var get = {};
 
-var $ = function ( selector, context ) {
-  "use strict";
+get.selectAll = function(selector, context){
+//Make sure we enable strict mode.
+"use strict";
 
-  context = context || document;
-  selector = selector.trim();
+//Set context equal to context or document.
+context = context || document;
+ //Make sure the selector value does not have any spaces or whitespaces.
+selector = selector.trim();
 
-  var match,
-    to_keep = [],
-    elements = [],
-    id_regex = /(?:#([\w-]+))/,
-    tag_regex = /^(\w+)/,
-    class_regex = /(?:\.([\w-]+))/,
-    currentSelector = selector.split(" ")[0],
-    remainingSelector = selector.indexOf(" ") !== -1 ?
-                        selector.substr(selector.indexOf(" ")+1) :
-                        "";
+//Define our variables
+var match,
+to_keep = [],
+elements = [],
+id_regex = /(?:#([\w-]+))/,
+tag_regex = /^(\w+)/,
+class_regex = /(?:\.([\w-]+))/,
+currentSelector = selector.split(" ")[0],
+remainingSelector = selector.indexOf(" ") !== -1 ? selector.substr(selector.indexOf(" ")+1) : "";
 
+//Define a variable named previous selector and set it equal to our current selector.
+var previousSelector = currentSelector;
+//While our currentSelectors length does not equal 0.
+while(currentSelector.length !== 0){
 
-  var previousSelector = currentSelector;
-  while (currentSelector.length !== 0) {
+//#ID
+match = id_regex.exec(currentSelector);
+//If match.
+if(match){
+//Set currentSelector equal to currentSelector.replace(match[0], "");
+currentSelector = currentSelector.replace(match[0], "");
 
-    // #ID
-    match = id_regex.exec(currentSelector);
-    if (match) {
-      currentSelector = currentSelector.replace(match[0], "");
-
-      var element = null;
-      if (context === document) {
-        element = context.getElementById(match[1]);
-      } else {
-        if (context.ownerDocument) {
-          var test_element = context.ownerDocument.getElementById(match[1]);
+//Create and set a variable named element to null.
+var element = null;
+  
+//If context equals document.
+if(context === document){
+//Set element equal to context which equals document, translation:"document.getElementById(match[1]);".
+element = context.getElementById(match[1]);
+} else {
+//If context.ownerDOcument.
+if(context.ownerDocument){
+//Create a variable named test_element equal to context.ownerDocument.getELementById(match[1]);
+var test_element = context.ownerDocument.getElementById(match[1]);
           
-          // Bitwise AND on bit4 to test if DOCUMENT_POSITION_CONTAINED_BY
-          if ((context.compareDocumentPosition(test_element) & 16) === 16) {
-            element = test_element;
-          }
-        }
-      }
-      if (element) {
-        elements.push(element);
-      } else {
-        return elements;
-      }
-    }
+// Bitwise AND on bit4 to test if DOCUMENT_POSITION_CONTAINED_BY
+if((context.compareDocumentPosition(test_element) & 16) === 16){
+element = test_element;
+}
+}
+}
+if(element){
+elements.push(element);
+} else {
+return elements;
+}
+}
 
-    // TAG
-    match = tag_regex.exec(currentSelector);
-    if (match) {
-      currentSelector = currentSelector.replace(match[0], "");
-      if (elements.length === 0) {
+//TAG
+match = tag_regex.exec(currentSelector);
+if(match){
+currentSelector = currentSelector.replace(match[0], "");
+if(elements.length === 0){
         elements = context.getElementsByTagName(match[1]);
       } else {
         to_keep = [];
@@ -67,7 +74,7 @@ var $ = function ( selector, context ) {
       }
     }
 
-    // .CLASS
+    //.CLASS
     match = class_regex.exec(currentSelector);
     if (match) {
       currentSelector = currentSelector.replace(match[0], "");
