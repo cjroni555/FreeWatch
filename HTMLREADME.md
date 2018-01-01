@@ -1,2 +1,2 @@
 #HTML
-FreeWatchs HTMl files for FreeWatchs website.
+FreeWatchs HTML files for FreeWatchs website
